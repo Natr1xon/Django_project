@@ -4,7 +4,9 @@
 
 ## Запуск проекта для разработки
 
-- 'python -m venv venv' - создание виртуального окружения
-- 'source venv/Scripts/activate' - войти в виртуальное окружение
-- 'pip install -r requrements.txt' - установка зависимостей
-- 
+- `python -m venv venv` - создание виртуального окружения
+- `source venv/Scripts/activate` - войти в виртуальное окружение
+- `pip install -r requrements.txt` - установка зависимостей
+- `python manage.py runserver` - запуск сервера для разработки на http://127.0.0.1:8000/
+
+
