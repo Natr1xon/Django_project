@@ -5,4 +5,6 @@
 ## Запуск проекта для разработки
 
 - 'python -m venv venv' - создание виртуального окружения
-- ukfdskjl
+- 'source venv/Scripts/activate' - войти в виртуальное окружение
+- 'pip install -r requrements.txt' - установка зависимостей
+- 
