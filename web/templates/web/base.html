@@ -4,13 +4,16 @@
   <title>Time tracker</title>
 </head>
 <body>
-  <h1><a href="i url 'main' %}">Time tracker</a></h1>
+  <h1><a href="{% url 'main' %}">Time tracker</a></h1>
   <nav>
-    <a href="% url 'main' %}">Главная</a>
+    <a href="{% url 'main' %}">Главная</a>
     {% if user.is_anonymous %}
       <a href="{% url 'registration' %}">Регистрация</a>
       <a href="{% url 'auth' %}">Авторизация</a>
     {% else %}
+      <a href="{% url 'borrow_book_add' %}">Создать аренду книги</a>
+      <a href="{% url 'books' %}">Книги</a>
+      <a href="{% url 'readers' %}">Читатели</a>
       <a href="{% url 'logout' %}">Выход</a>
     {% endif %}
   </nav>

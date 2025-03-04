@@ -5,5 +5,19 @@
     {% if not user.is_anonymous %}
         <p>Welcome <b>{{user.username}}</b></p>
     {% endif %}
-    <a href="http://ya.ru">Яндекс</a>
+    <a href="{% url 'borrow_book_add' %}">Создать анкету аренды книги</a>
+
+    <ul>
+        {% for book in borrow %}
+            <li>
+                <b>
+                    {{ book.reader }}
+                </b>
+                {{book.borrow_date|date}} - {{book.return_date|date}}
+                <a href="{% url 'borrow_book_edit' book.id %}">Редактировать</a>
+                <a href="{% url 'borrow_book_delete' book.id %}">Удалить</a>
+            </li>
+        {% endfor %}
+    </ul>
+
 {% endblock %}
