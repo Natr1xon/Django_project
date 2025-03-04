@@ -6,12 +6,25 @@ from web.forms import AuthForm
 
 from django.contrib.auth import get_user_model, authenticate, login, logout
 
+from web.forms import BorrowBookForm
+
+from web.models import Borrow
+
+from web.models import Book
+
+from web.forms import BooksForm
+
+from web.models import Reader
+
+from web.forms import ReaderForm
+
 Author = get_user_model()
 
 # Create your views here.
 
 def main_view(request):
-    return render(request,"web/main.html")
+    borrow = Borrow.objects.all()
+    return render(request,"web/main.html", {"borrow":borrow})
 
 def registration_view(request):
     form = RegistrationForm
@@ -44,6 +57,50 @@ def auth_view(request):
                 return redirect("main")
     return render(request,"web/auth.html",{"form":form})
 
+
 def logout_view(request):
     logout(request)
     return redirect("main")
+
+
+def borrow_book_edit_view(request, id = None):
+    borrow = Borrow.objects.get(id = id) if id is not None else None
+    form = BorrowBookForm(instance=borrow)
+    if request.method == 'POST':
+        form = BorrowBookForm(data=request.POST,initial = {"user": request.user})
+        if form.is_valid():
+            form.save()
+            return redirect("main")
+    return render(request,"web/borrow_book_form.html", {"form":form})
+
+
+def _list_editor_view(request, model_cls, form_cls, template_name, url_name):
+    items = model_cls.objects.all()
+    form = form_cls()
+    if request.method == 'POST':
+        form = form_cls(data=request.POST, initial={"user": request.user})
+    if form.is_valid():
+        form.save()
+        return redirect(url_name)
+    return render(request, f"web/{template_name}.html", {"items": items, "form": form})
+
+
+def books_view(request):
+    return _list_editor_view(request, Book, BooksForm, "book_form","books")
+
+
+def reader_view(request):
+    return _list_editor_view(request, Reader, ReaderForm, "reader_form","readers")
+
+def  borrow_book_delete(request,id):
+    borrow = Borrow.objects.get(id = id)
+    borrow.delete()
+    return redirect('main')
+
+
+
+
+
+
+
+

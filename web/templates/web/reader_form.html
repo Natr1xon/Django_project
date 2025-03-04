@@ -1,0 +1,22 @@
+{% extends "web/base.html" %}
+{% block content %}
+    <h1>Читатели</h1>
+    <ul>
+        <hr>
+        {% for reader in items %}
+            <li>
+                Firstname - {{reader.firstname}}
+            </li>
+            Lastname - {{reader.lastname}} <br>
+            Birthday - {{reader.date_of_birth|date}}
+        <hr>
+        {% endfor %}
+    </ul>
+
+    <b>Добавление читателя</b>
+    <form action="" method = "post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button>Save</button>
+    </form>
+{% endblock %}

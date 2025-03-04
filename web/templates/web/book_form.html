@@ -1,0 +1,21 @@
+{% extends "web/base.html" %}
+{% block content %}
+    <h1>Книги</h1>
+    <ul>
+        <hr>
+        {% for book in items %}
+            <li>
+                Title - {{book.title}}
+            </li>
+            Genre - {{book.genre}}
+        <hr>
+        {% endfor %}
+    </ul>
+
+    <b>Добавление книги</b>
+    <form action="" method = "post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button>Save</button>
+    </form>
+{% endblock %}
