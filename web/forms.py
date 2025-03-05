@@ -1,3 +1,4 @@
+from importlib.metadata import requires
 from pydoc import render_doc
 
 from django import forms
@@ -33,9 +34,6 @@ class AuthForm(forms.Form):
 
 
 class BorrowBookForm(forms.ModelForm):
-    borrow_date = forms.DateTimeField(widget=forms.DateTimeInput(attrs={"type":"datetime-local"}))
-    return_date = forms.DateTimeField(widget=forms.DateTimeInput(attrs={"type": "datetime-local"}))
-
     def save(self,commit=True):
         self.instance.user = self.initial['user']
         return super().save(commit)
@@ -43,6 +41,10 @@ class BorrowBookForm(forms.ModelForm):
     class Meta:
         model = Borrow
         fields = ("reader", "book", "borrow_date","return_date")
+        widgets = {
+            "borrow_date" : forms.DateTimeInput(attrs={"type":"datetime-local"}),
+            "return_date" : forms.DateTimeInput(attrs={"type":"datetime-local"})
+        }
 
 
 class BooksForm(forms.ModelForm):
@@ -56,7 +58,6 @@ class BooksForm(forms.ModelForm):
 
 
 class ReaderForm(forms.ModelForm):
-    date_of_birth = forms.DateTimeField(widget=forms.DateTimeInput(attrs={"type":"datetime-local"}))
     def save(self,commit=True):
         self.instance.user = self.initial['user']
         return super().save(commit)
@@ -64,3 +65,24 @@ class ReaderForm(forms.ModelForm):
     class Meta:
         model = Reader
         fields = {"firstname","lastname","date_of_birth"}
+        widgets = {
+            "date_of_birth" : forms.DateTimeInput(attrs={"type":"datetime-local"})
+        }
+
+
+class BorrowBookFilter(forms.Form):
+    search = forms.CharField(label = "",widget=forms.TextInput(attrs={"placeholder":"Поиск"}),required=False)
+    borrow_date = forms.DateTimeField(
+        label = "От",
+        widget=forms.DateTimeInput(
+            attrs={"type": "datetime-local"}
+        ),
+        required=False
+    )
+    return_date = forms.DateTimeField(
+        label="До",
+        widget=forms.DateTimeInput(
+            attrs={"type": "datetime-local"}
+        ),
+        required=False
+    )
