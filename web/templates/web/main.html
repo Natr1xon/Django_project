@@ -15,8 +15,8 @@
             {{ field }}
         {% endfor %}
         <button>Найти</button>
+        <button name="export" value="csv">Экспорт в CSV</button>
     </form>
-
     Всего {{total_count}}
     <ul>
         {% for book in borrow %}
