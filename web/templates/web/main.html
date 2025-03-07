@@ -7,17 +7,45 @@
     {% endif %}
     <a href="{% url 'borrow_book_add' %}">Создать анкету аренды книги</a>
 
+        <hr>
+    <form action="">
+        <b>Фильтр:</b><br>
+        {% for field in filter_form %}
+            {{ field.label }}
+            {{ field }}
+        {% endfor %}
+        <button>Найти</button>
+    </form>
+
+    Всего {{total_count}}
     <ul>
         {% for book in borrow %}
             <li>
                 <b>
                     {{ book.reader }}
-                </b>
-                {{book.borrow_date|date}} - {{book.return_date|date}}
+                </b> - {{ book.spent_time }}
+                <br>
+                <p style="margin-left: 50px;">Название: {{book.book}}</p>
+                <p style="margin-left: 50px;">Период аренды: {{book.borrow_date|date}} - {{book.return_date|date}}</p>
+
                 <a href="{% url 'borrow_book_edit' book.id %}">Редактировать</a>
                 <a href="{% url 'borrow_book_delete' book.id %}">Удалить</a>
+                <hr>
             </li>
         {% endfor %}
     </ul>
 
+    <nav>
+        {% if borrow.has_previous %}
+            <a href="?page=1">В начало</a>
+            <a href="?page={{ borrow.previous_page_number }}">предыдующая страница</a>
+        {% endif %}
+
+        Стpaница {{ borrow.number }} из {{ borrow.paginator.num_pages }}
+
+        {% if borrow.has_next %}
+            <a href="?page={{ borrow.next_page_number }}">следующая страница</a>
+            <a href="?page={{ borrow.paginator.num_pages }}">B конец</a>
+        {% endif %}
+    </nav>
 {% endblock %}

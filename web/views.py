@@ -1,3 +1,5 @@
+from django.core.paginator import Paginator
+from django.db.models import F
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 
@@ -18,13 +20,39 @@ from web.models import Reader
 
 from web.forms import ReaderForm
 
+from web.forms import BorrowBookFilter
+
 Author = get_user_model()
 
 # Create your views here.
 
 def main_view(request):
     borrow = Borrow.objects.all()
-    return render(request,"web/main.html", {"borrow":borrow})
+
+    filter_form = BorrowBookFilter(request.GET)
+    filter_form.is_valid()
+    filters = filter_form.cleaned_data
+
+    if filters['search']:
+        borrow = borrow.filter(book=filters['search'])
+
+    if filters['borrow_date']:
+        borrow = borrow.filter(borrow_date__gte = filters['borrow_date'])
+
+    if filters['return_date']:
+        borrow = borrow.filter(borrow_date__lte = filters['return_date'])
+
+
+    total_count = borrow.count()
+
+    borrow = borrow.prefetch_related("reader").select_related("book").annotate(spent_time = F("return_date") - F("borrow_date"))
+
+    page_number = request.GET.get("page",1)
+    paginator = Paginator(borrow,per_page = 10)
+    return render(request,"web/main.html", {"borrow":paginator.get_page(page_number),
+                                            "form": BorrowBookForm(),
+                                            "filter_form": filter_form,
+                                            "total_count":total_count})
 
 def registration_view(request):
     form = RegistrationForm
