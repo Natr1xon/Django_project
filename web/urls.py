@@ -17,8 +17,11 @@ from web.views import reader_view
 
 from web.views import borrow_book_delete
 
+from web.views import import_view
+
 urlpatterns = [
     path("", main_view, name = "main"),
+    path("import/", import_view, name = "import"),
     path("registration/",registration_view, name = "registration"),
     path("auth/",auth_view, name = "auth"),
     path("logout/", logout_view, name = "logout"),

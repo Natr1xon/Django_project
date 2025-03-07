@@ -22,6 +22,13 @@ from web.forms import ReaderForm
 
 from web.forms import BorrowBookFilter
 
+from web.forms import ImportForm
+from web.services import filter_borrow_book
+
+from web.services import import_book_from_csv
+
+from web.services import export_book_csv
+
 Author = get_user_model()
 
 # Create your views here.
@@ -31,17 +38,7 @@ def main_view(request):
 
     filter_form = BorrowBookFilter(request.GET)
     filter_form.is_valid()
-    filters = filter_form.cleaned_data
-
-    if filters['search']:
-        borrow = borrow.filter(book=filters['search'])
-
-    if filters['borrow_date']:
-        borrow = borrow.filter(borrow_date__gte = filters['borrow_date'])
-
-    if filters['return_date']:
-        borrow = borrow.filter(borrow_date__lte = filters['return_date'])
-
+    borrow = filter_borrow_book(borrow,filter_form.cleaned_data)
 
     total_count = borrow.count()
 
@@ -49,10 +46,27 @@ def main_view(request):
 
     page_number = request.GET.get("page",1)
     paginator = Paginator(borrow,per_page = 10)
+
+    if request.GET.get('export') == 'csv':
+        response = HttpResponse(
+            content_type='text/csv',
+            headers={"Content-Disposition": "attachment; filename=book_borrow.csv"}
+        )
+        return export_book_csv(borrow, response)
+
     return render(request,"web/main.html", {"borrow":paginator.get_page(page_number),
                                             "form": BorrowBookForm(),
                                             "filter_form": filter_form,
                                             "total_count":total_count})
+
+def import_view(request):
+    if request.method == 'POST':
+        form = ImportForm(files = request.FILES)
+        if form.is_valid():
+            import_book_from_csv(form.cleaned_data['file'])
+            return redirect("main")
+    return render(request,"web/import.html",
+                  {"form":ImportForm})
 
 def registration_view(request):
     form = RegistrationForm
