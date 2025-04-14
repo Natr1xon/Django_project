@@ -2,32 +2,11 @@ from django.core.paginator import Paginator
 from django.db.models import F
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-
-from web.forms import RegistrationForm
-from web.forms import AuthForm
-
 from django.contrib.auth import get_user_model, authenticate, login, logout
 
-from web.forms import BorrowBookForm
-
-from web.models import Borrow
-
-from web.models import Book
-
-from web.forms import BooksForm
-
-from web.models import Reader
-
-from web.forms import ReaderForm
-
-from web.forms import BorrowBookFilter
-
-from web.forms import ImportForm
-from web.services import filter_borrow_book
-
-from web.services import import_book_from_csv
-
-from web.services import export_book_csv
+from web.services import filter_borrow_book, export_book_csv, import_book_from_csv
+from web.forms import BorrowBookForm, BooksForm, ReaderForm, BorrowBookFilter, ImportForm, RegistrationForm, AuthForm
+from web.models import Borrow, Book, Reader
 
 Author = get_user_model()
 

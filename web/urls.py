@@ -1,23 +1,8 @@
 from django.contrib import admin
 from django.urls import path
 
-from web.views import main_view
-
-from web.views import registration_view
-
-from web.views import auth_view
-
-from web.views import logout_view
-
-from web.views import borrow_book_edit_view
-
-from web.views import books_view
-
-from web.views import reader_view
-
-from web.views import borrow_book_delete
-
-from web.views import import_view
+from web.views import main_view, import_view, registration_view, auth_view, logout_view, borrow_book_edit_view, \
+    borrow_book_delete, books_view, reader_view
 
 urlpatterns = [
     path("", main_view, name = "main"),

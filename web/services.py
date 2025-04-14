@@ -1,8 +1,6 @@
 import csv
 
-from web.models import Borrow
-
-from web.models import Reader, Book
+from web.models import Reader, Book, Borrow
 
 
 def filter_borrow_book(book_qs, filters: dict):
